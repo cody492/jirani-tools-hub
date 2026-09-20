@@ -1,0 +1,50 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Security Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+             request.auth.uid == 'HxHGshHYdWY36dyBG3aSa6Sarik2' &&
+             request.auth.token.email == 'codydracula035@gmail.com';
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Users Collection: Strict Personal Isolation + Admin Authorization
+    // Each user can ONLY read and manage their own profile. Admin can list/view all users.
+    match /users/{userId} {
+      allow get: if (isOwner(userId) && isValidId(userId)) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidId(userId) && request.resource.data.uid == userId;
+      allow update: if isOwner(userId) && isValidId(userId) && request.resource.data.uid == userId;
+      allow delete: if (isOwner(userId) && isValidId(userId)) || isAdmin();
+    }
+
+    // Investigations Collection: Strict Multi-Tenant Isolation + Admin Authorization
+    // User A can NEVER view User B's telemetry, but authenticated admin can list all for audit.
+    match /investigations/{investigationId} {
+      allow get: if (isSignedIn() && isValidId(investigationId) && resource.data.userId == request.auth.uid) || isAdmin();
+      allow list: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow create: if isSignedIn() && isValidId(investigationId) && request.resource.data.userId == request.auth.uid;
+      allow update: if (isSignedIn() && isValidId(investigationId) && resource.data.userId == request.auth.uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b101c"/>
+      <stop offset="100%" stop-color="#070a12"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#00a3ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded Background Container -->
+  <rect x="24" y="24" width="464" height="464" rx="96" ry="96" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="8"/>
+
+  <!-- Shield Outline with Neon Cyan Glow -->
+  <path 
+    d="M256 96 C336 96 384 136 384 216 C384 324 296 392 256 416 C216 392 128 324 128 216 C128 136 176 96 256 96 Z" 
+    fill="none" 
+    stroke="url(#shieldGrad)" 
+    stroke-width="26" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+    filter="url(#glow)"
+  />
+
+  <!-- Center Checkmark -->
+  <path 
+    d="M208 256 L244 292 L308 220" 
+    fill="none" 
+    stroke="#00f0ff" 
+    stroke-width="26" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+  />
+</svg>

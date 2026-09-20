@@ -1,0 +1,16 @@
+{
+  "name": "web-forensics-production",
+  "version": "1.0.0",
+  "description": "WEB FORENSICS Production Server & Standalone Deployment Package",
+  "private": true,
+  "main": "server.cjs",
+  "scripts": {
+    "start": "node server.cjs"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

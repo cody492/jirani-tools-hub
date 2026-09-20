@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with authentication and demographic metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique Firebase Authentication UID" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Display name or handle" },
+        "birthAge": { "type": "string", "description": "User declared age or birth year" },
+        "photoURL": { "type": "string", "description": "Avatar photo URL" },
+        "signInMethod": { "type": "string", "description": "Authentication method: Google (Gmail) or Email / Password" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when account was created" },
+        "lastLoginAt": { "type": "string", "format": "date-time", "description": "Timestamp of most recent login" }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "Investigation": {
+      "title": "Investigation",
+      "description": "Persisted digital forensic analysis finding for a public web target",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique investigation identification code" },
+        "userId": { "type": "string", "description": "Firebase Auth UID of the investigator who initiated the scan" },
+        "targetDomain": { "type": "string", "description": "Apex or registered target domain" },
+        "targetHostname": { "type": "string", "description": "Target fully qualified hostname" },
+        "targetUrl": { "type": "string", "description": "Canonical normalized URL analyzed" },
+        "status": { "type": "string", "description": "Investigation execution status: COMPLETE or ERROR" },
+        "startedAt": { "type": "string", "format": "date-time", "description": "UTC timestamp when investigation started" },
+        "durationMs": { "type": "number", "description": "Total probe and analysis latency in milliseconds" },
+        "httpIntelligence": { "type": "object", "description": "Full HTTP request/response semantics, hops, headers, document metadata" },
+        "infrastructureIntelligence": { "type": "object", "description": "DNS topologies, A, AAAA, MX, NS, TXT records" },
+        "technologyReport": { "type": "object", "description": "Detected technologies, CMS, frameworks, script bundles, CDN providers" },
+        "securityReport": { "type": "object", "description": "Security audit findings, TLS certificate, HTTPS enforcement, CSP/HSTS headers" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Firestore record creation timestamp" }
+      },
+      "required": ["id", "userId", "targetHostname", "status", "startedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Stores user profile and account details keyed by auth UID"
+    },
+    "/investigations/{investigationId}": {
+      "schema": "Investigation",
+      "description": "Stores complete forensic findings keyed by investigation ID with user-isolation"
+    }
+  }
+}
